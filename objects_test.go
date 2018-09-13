@@ -14,20 +14,30 @@ func TestObjects_Struct(t *testing.T) {
 
 	objects := yorm.NewObjects(pkgs)
 
-	str, err := objects.Struct("foo", "Foo")
+	s, err := objects.Struct("model", "User")
 	require.NoError(t, err)
 
-	assert.Equal(t, "foo", str.Package)
-	assert.Equal(t, "Foo", str.Name)
+	assert.Len(t, s.Fields, 2)
+
+	f0 := s.Fields[0]
+	f1 := s.Fields[1]
+
+	assert.Equal(t, "Email", f0.Name)
+	assert.Equal(t, yorm.String, f0.Type)
+
+	assert.Equal(t, "Age", f1.Name)
+	assert.Equal(t, yorm.Int, f1.Type)
 }
 
 func newPackages(t *testing.T) map[string]*ast.Package {
 	t.Helper()
 
 	src := `
-package foo
+package model
 
-type Foo struct {
+type User struct {
+        Email string
+        Age   int
 }
 `
 	parser := yorm.NewParser()
