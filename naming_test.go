@@ -8,7 +8,7 @@ import (
 )
 
 func TestDefaultNaming(t *testing.T) {
-	naming := yorm.DefaultNaming{}
+	naming := yorm.DefaultNaming()
 
 	assert.Equal(t, "foo_bar", naming.Column("FooBar"))
 	assert.Equal(t, "FooBar", naming.Field("foo_bar"))

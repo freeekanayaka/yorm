@@ -43,6 +43,7 @@ func astToStruct(obj *ast.Object) (*Struct, error) {
 	}
 
 	s := &Struct{
+		Type:   obj.Name,
 		Fields: []*Field{},
 	}
 

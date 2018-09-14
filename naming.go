@@ -15,16 +15,20 @@ type Naming interface {
 
 // DefaultNaming implements yorm's default naming convention, which is to use
 // camel case names for Go struct/fields and snake case names for SQL names.
-type DefaultNaming struct {
+func DefaultNaming() Naming {
+	return &defaultNaming{}
+}
+
+type defaultNaming struct {
 }
 
 // Column converts a Go field name (camel case) to a SQL column (snake case)
-func (n *DefaultNaming) Column(field string) string {
+func (n *defaultNaming) Column(field string) string {
 	return Snake(field)
 }
 
 // Field converts a SQL column name (snake case) to a Go field name (camel case)
-func (n *DefaultNaming) Field(column string) string {
+func (n *defaultNaming) Field(column string) string {
 	return Camel(column)
 }
 

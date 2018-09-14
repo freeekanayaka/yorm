@@ -17,6 +17,8 @@ func TestObjects_Struct(t *testing.T) {
 	s, err := objects.Struct("model", "User")
 	require.NoError(t, err)
 
+	assert.Equal(t, "User", s.Type)
+
 	assert.Len(t, s.Fields, 2)
 
 	f0 := s.Fields[0]
