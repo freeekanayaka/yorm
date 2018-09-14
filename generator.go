@@ -63,22 +63,6 @@ func (g *Generator) Query(name string, s *Struct, fields ...string) error {
 	return nil
 }
 
-// A appends code to the current line.
-func (g *Generator) A(format string, a ...interface{}) {
-	fmt.Fprintf(g.buf, format, a...)
-}
-
-// N accumulates a single new line.
-func (g *Generator) N() {
-	fmt.Fprintf(g.buf, "\n")
-}
-
-// L accumulates a single line of source code.
-func (g *Generator) L(format string, a ...interface{}) {
-	g.A(format, a...)
-	g.N()
-}
-
 // Output returns the generated source code.
 func (g *Generator) Output() ([]byte, error) {
 	data := g.buf.Bytes()
