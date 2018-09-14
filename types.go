@@ -11,6 +11,16 @@ type Struct struct {
 	Fields []*Field
 }
 
+// Get returns the field with the given name, if any.
+func (s *Struct) Get(name string) *Field {
+	for _, field := range s.Fields {
+		if field.Name == name {
+			return field
+		}
+	}
+	return nil
+}
+
 // AnonymousStruct is a helper to create an anonymous struct with the given fields.
 func AnonymousStruct(fields []*Field) *Struct {
 	declarations := make([]string, len(fields))

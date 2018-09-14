@@ -45,8 +45,8 @@ func {{.Name}} (ctx context.Context, stmt *sql.Stmt, args ...interface{}) ([]{{.
                 objects = append(objects, {{.Struct.Type}}{})
 
                 if err := rows.Scan(
-                {{- range .Struct.Fields }}
-                        &objects[i].{{ .Name }},
+                {{- range .Fields }}
+                        &objects[i].{{ . }},
                 {{- end}}
                 ); err != nil {
                         return nil, errors.Wrap(err, "{{.Name}}: scan row")

@@ -24,18 +24,37 @@ func NewGenerator(templates *Templates, naming Naming) *Generator {
 	}
 }
 
-// StructQuery generates a function that given a sql.Stmt and a slice
-// of field names, executes the query and returns a slice of anonymous
-// structures with those fields.
-func (g *Generator) StructQuery(name string, s *Struct) error {
+// StructQuery generates a function that given a sql.Stmt and a struct
+// definition, executes the query and returns a slice of instances of that
+// struct with the query columns mapped to the struct fields.
+//
+// If the fields slice is non-empty, only those fields will be filled.
+func (g *Generator) StructQuery(name string, s *Struct, fields ...string) error {
 	template := g.templates.Get(StructQueryTmpl)
+
+	if len(fields) == 0 {
+		fields = make([]string, len(s.Fields))
+		for i, field := range s.Fields {
+			fields[i] = field.Name
+		}
+	} else {
+		// Ensure that the provided field names are valid.
+		for _, name := range fields {
+			field := s.Get(name)
+			if field == nil {
+				return fmt.Errorf("struct %s has no %s field", s.Type, name)
+			}
+		}
+	}
 
 	err := template.Execute(g.buf, struct {
 		Name   string
 		Struct *Struct
+		Fields []string
 	}{
 		Name:   name,
 		Struct: s,
+		Fields: fields,
 	})
 	if err != nil {
 		return errors.Wrap(err, "execute template")
