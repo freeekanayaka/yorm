@@ -24,13 +24,13 @@ func NewGenerator(templates *Templates, naming Naming) *Generator {
 	}
 }
 
-// StructQuery generates a function that given a sql.Stmt and a struct
+// Query generates a function that given a sql.Stmt and a struct
 // definition, executes the query and returns a slice of instances of that
 // struct with the query columns mapped to the struct fields.
 //
 // If the fields slice is non-empty, only those fields will be filled.
-func (g *Generator) StructQuery(name string, s *Struct, fields ...string) error {
-	template := g.templates.Get(StructQueryTmpl)
+func (g *Generator) Query(name string, s *Struct, fields ...string) error {
+	template := g.templates.Get(QueryTmpl)
 
 	if len(fields) == 0 {
 		fields = make([]string, len(s.Fields))

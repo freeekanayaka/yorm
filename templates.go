@@ -24,14 +24,14 @@ func (t *Templates) Set(code int, template *template.Template) {
 
 // Template codes.
 const (
-	StructQueryTmpl = iota
+	QueryTmpl = iota
 )
 
 var defaultTemplates = map[int]*template.Template{
-	StructQueryTmpl: structQueryTmpl,
+	QueryTmpl: queryTmpl,
 }
 
-var structQueryTmpl = template.Must(template.New("").Parse(`
+var queryTmpl = template.Must(template.New("").Parse(`
 func {{.Name}} (ctx context.Context, stmt *sql.Stmt, args ...interface{}) ([]{{.Struct.Type}}, error) {
         objects := make([]{{.Struct.Type}}, 0)
 

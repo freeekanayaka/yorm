@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestGenerator_StructQuery(t *testing.T) {
+func TestGenerator_Query(t *testing.T) {
 	templates := yorm.NewTemplates()
 	naming := yorm.DefaultNaming()
 	generator := yorm.NewGenerator(templates, naming)
@@ -19,7 +19,7 @@ func TestGenerator_StructQuery(t *testing.T) {
 	}
 
 	s := yorm.AnonymousStruct(fields)
-	err := generator.StructQuery("f", s)
+	err := generator.Query("f", s)
 	require.NoError(t, err)
 
 	output, err := generator.Output()
@@ -63,7 +63,7 @@ func f(ctx context.Context, stmt *sql.Stmt, args ...interface{}) ([]struct {
 `, string(output))
 }
 
-func TestGenerator_StructQuery_Fields(t *testing.T) {
+func TestGenerator_Query_Fields(t *testing.T) {
 	templates := yorm.NewTemplates()
 	naming := yorm.DefaultNaming()
 	generator := yorm.NewGenerator(templates, naming)
@@ -74,7 +74,7 @@ func TestGenerator_StructQuery_Fields(t *testing.T) {
 	}
 
 	s := yorm.AnonymousStruct(fields)
-	err := generator.StructQuery("f", s, "Email")
+	err := generator.Query("f", s, "Email")
 	require.NoError(t, err)
 
 	output, err := generator.Output()
