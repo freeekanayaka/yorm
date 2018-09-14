@@ -24,14 +24,29 @@ func NewGenerator(templates *Templates, naming Naming) *Generator {
 	}
 }
 
+// Header generates the header of a source file.
+func (g *Generator) Header(pkg string, imports []string) error {
+	template := g.templates.Get(HeaderTmpl)
+	err := template.Execute(g.buf, struct {
+		Package string
+		Imports []string
+	}{
+		Package: pkg,
+		Imports: imports,
+	})
+	if err != nil {
+		return errors.Wrap(err, "execute template")
+	}
+
+	return nil
+}
+
 // Query generates a function that given a sql.Stmt and a struct
 // definition, executes the query and returns a slice of instances of that
 // struct with the query columns mapped to the struct fields.
 //
 // If the fields slice is non-empty, only those fields will be filled.
 func (g *Generator) Query(name string, s *Struct, fields ...string) error {
-	template := g.templates.Get(QueryTmpl)
-
 	if len(fields) == 0 {
 		fields = make([]string, len(s.Fields))
 		for i, field := range s.Fields {
@@ -47,6 +62,7 @@ func (g *Generator) Query(name string, s *Struct, fields ...string) error {
 		}
 	}
 
+	template := g.templates.Get(QueryTmpl)
 	err := template.Execute(g.buf, struct {
 		Name   string
 		Struct *Struct

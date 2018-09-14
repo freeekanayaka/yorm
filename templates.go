@@ -24,12 +24,25 @@ func (t *Templates) Set(code int, template *template.Template) {
 
 // Template codes.
 const (
-	QueryTmpl = iota
+	HeaderTmpl = iota
+	QueryTmpl
 )
 
 var defaultTemplates = map[int]*template.Template{
-	QueryTmpl: queryTmpl,
+	HeaderTmpl: headerTmpl,
+	QueryTmpl:  queryTmpl,
 }
+
+var headerTmpl = template.Must(template.New("").Parse(`package {{.Package}}
+
+// The code below was automatically generated - DO NOT EDIT!
+
+import (
+        {{- range .Imports }}
+                "{{ . }}"
+        {{- end}}
+)
+`))
 
 var queryTmpl = template.Must(template.New("").Parse(`
 func {{.Name}} (ctx context.Context, stmt *sql.Stmt, args ...interface{}) ([]{{.Struct.Type}}, error) {

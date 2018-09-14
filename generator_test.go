@@ -8,10 +8,28 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestGenerator_Header(t *testing.T) {
+	generator := newGenerator()
+
+	err := generator.Header("foo", []string{"fmt", "example.com/foo/bar"})
+	require.NoError(t, err)
+
+	output, err := generator.Output()
+	require.NoError(t, err)
+
+	assert.Equal(t, `package foo
+
+// The code below was automatically generated - DO NOT EDIT!
+
+import (
+	"example.com/foo/bar"
+	"fmt"
+)
+`, string(output))
+}
+
 func TestGenerator_Query(t *testing.T) {
-	templates := yorm.NewTemplates()
-	naming := yorm.DefaultNaming()
-	generator := yorm.NewGenerator(templates, naming)
+	generator := newGenerator()
 
 	fields := []*yorm.Field{
 		{Name: "Email", Type: yorm.String},
@@ -64,9 +82,7 @@ func f(ctx context.Context, stmt *sql.Stmt, args ...interface{}) ([]struct {
 }
 
 func TestGenerator_Query_Fields(t *testing.T) {
-	templates := yorm.NewTemplates()
-	naming := yorm.DefaultNaming()
-	generator := yorm.NewGenerator(templates, naming)
+	generator := newGenerator()
 
 	fields := []*yorm.Field{
 		{Name: "Email", Type: yorm.String},
@@ -115,4 +131,11 @@ func f(ctx context.Context, stmt *sql.Stmt, args ...interface{}) ([]struct {
 	return objects, nil
 }
 `, string(output))
+}
+
+func newGenerator() *yorm.Generator {
+	templates := yorm.NewTemplates()
+	naming := yorm.DefaultNaming()
+
+	return yorm.NewGenerator(templates, naming)
 }
